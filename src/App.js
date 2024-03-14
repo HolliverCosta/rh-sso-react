@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { KeycloakProvider } from "keycloak-react-web";
+import Login from './Login';
+import keycloak from './keyclock';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Home from './Home';
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <KeycloakProvider
+      client={keycloak}
+      initOptions={{ 
+        onLoad: 'check-sso', 
+        redirectUri: 'http://localhost:3000/home',
 
-export default App;
+      }}
+    >
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            exact
+            element={<Login />}
+            
+            />
+            <Route
+            path="/home"
+            exact
+            element={<Home />}
+            />
+        </Routes>
+     
+      </BrowserRouter>
+    </KeycloakProvider>
+  );
+};
